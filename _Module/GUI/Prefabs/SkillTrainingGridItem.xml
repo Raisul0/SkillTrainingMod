@@ -1,0 +1,55 @@
+<Prefab>
+	<Constants>
+
+		<Constant Name="CharacterDeveloper.SkillButtonBackground.Width" BrushLayer="Default" BrushName="CharacterDeveloper.SkillButtonBackground" BrushValueType="Width" />
+		<Constant Name="CharacterDeveloper.SkillButtonBackground.Height" BrushLayer="Default" BrushName="CharacterDeveloper.SkillButtonBackground" BrushValueType="Height" />
+
+	</Constants>
+	<Window>
+		<SkillTrainingGridItemWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!CharacterDeveloper.SkillButtonBackground.Width" SuggestedHeight="!CharacterDeveloper.SkillButtonBackground.Height" VerticalAlignment="Top" CanLearnBrush="CharacterDeveloper.SkillButtonBackground" CannotLearnBrush="CharacterDeveloper.SkillButtonBackground.CannotLearn" Command.Click="ExecuteInspect" CurrentFocusLevel="@CurrentFocusLevel" FocusLevelWidget="FocusLevelWidget" HorizontaAlignment="Center" IsSelected="@IsInspected" Command.AlternateClick="ExecuteShowSkillConcept" CanLearnSkill="@CanLearnSkill">
+			<Children>
+
+				<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" VerticalAlignment="Top" MarginLeft="10" Brush="CharacterDeveloper.GridSkillName.Text" IsEnabled="@CanLearnSkill" Text="@NameText" DoNotAcceptEvents="true"/>
+				<ButtonWidget   WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+												SuggestedHeight="30" SuggestedWidth="30"
+												HorizontalAlignment="Center" VerticalAlignment="Top"
+												MarginLeft="130"
+												Command.Click="ExecuteOnSelected" >
+					<Children>
+						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="30" Sprite="@SpriteName" DoNotAcceptEvents="true"/>
+					</Children>
+				</ButtonWidget>
+				<!--  -->
+				<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="92" SuggestedHeight="94" HorizontalAlignment="Left" MarginLeft="0" MarginTop="28" Sprite="CharacterDeveloper\skills_icon_shadow" IsDisabled="true">
+					<Children>
+						<SkillIconVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Center" VerticalAlignment="Center" SkillId="@SkillId"  UseSmallVariation="true"/>
+					</Children>
+				</Widget>
+
+				<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Top" MarginLeft="82" MarginTop="40" Brush="CharacterDeveloper.GridSkillLevel.Text" IntText="@Level" DoNotAcceptEvents="true" IsEnabled="@CanLearnSkill"/>
+
+				<BrushWidget Id="FocusLevelWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="87" SuggestedHeight="43" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="3" MarginBottom="10" Brush="SkillFocusLevelBrush" IsDisabled="true" IsVisible="false"/>
+
+				<SkillPointsContainerListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginBottom="16" MarginRight="5" CurrentFocusLevel="@CurrentFocusLevel" IsEnabled="false">
+					<Children>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="5" ForcePixelPerfectRenderPlacement="true"/>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="5" ForcePixelPerfectRenderPlacement="true"/>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="5" ForcePixelPerfectRenderPlacement="true"/>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="5" ForcePixelPerfectRenderPlacement="true"/>
+						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="2" ForcePixelPerfectRenderPlacement="true"/>
+					</Children>
+				</SkillPointsContainerListPanel>
+
+				<!-- <HintWidget DataSource="{SkillFocusAndLevelHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" /> -->
+				<ValueBasedVisibilityWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="33" SuggestedHeight="36" IndexToBeVisible="0" WatchType="BiggerThan" IndexToWatch="@NumOfUnopenedPerks" HorizontalAlignment="Right" VerticalAlignment="Top" PositionYOffset="-4" IsEnabled="false">
+					<Children>
+						<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.PerkNotificationBrush"/>
+						<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="18"  IntText="@NumOfUnopenedPerks" ClipContents="false"/>
+					</Children>
+				</ValueBasedVisibilityWidget>
+
+
+			</Children>
+		</SkillTrainingGridItemWidget>
+	</Window>
+</Prefab>
