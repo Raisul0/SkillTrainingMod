@@ -20,12 +20,12 @@ namespace SkillTrainingMod.Behaviors
     {
         public SkillTrainingState skillTrainingState;
 
-        private static float _personalSkillXpIncrement = 6;
-        private static int _personalSkillGoldCost = 300 * (int)_personalSkillXpIncrement;
-        private static float _partySkillXpIncrement = 3;
-        private static int _partySkillGoldCost = 900 * (int)_partySkillXpIncrement;
-        private static float _leaderSkillXpIncrement = 1;
-        private static int _leaderSkillGoldCost = 1800 * (int)_leaderSkillXpIncrement;
+        private static int SkillPointfor0to100 = 6;
+        private static int GoldCostForSkill0to100 = 300 * SkillPointfor0to100;
+        private static int SkillPointfor101to200 = 3;
+        private static int GoldCostForSkill101to200 = 900 * SkillPointfor101to200;
+        private static int SkillPointfor201to300 = 1;
+        private static int GoldCostForSkill201to300 = 1800 * SkillPointfor201to300;
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -35,23 +35,30 @@ namespace SkillTrainingMod.Behaviors
 
         private void OnDailyTickEvent()
         {
-            var boastedSkills = GetSkillTrainingState().BoastedSkills;
-            if (boastedSkills != null  && boastedSkills.Count > 0)
+            var skillTrainingState = GetSkillTrainingState();
+            var boastedSkills = skillTrainingState.BoastedSkills;
+
+            if (boastedSkills != null && boastedSkills.Count > 0)
             {
-                boastedSkills.ForEach(skill => {
-
+                boastedSkills.ForEach(skill =>
+                {
                     int heroGold = Hero.MainHero.Gold;
-                    float xp = 0;
-                    int goldCost = 0;
+                    var skillXp = skill.CurrentSkillXP;
 
-                    if (skill.IsPersonalSkill) { xp = _personalSkillXpIncrement; goldCost = _personalSkillGoldCost; }
-                    else if (skill.IsPartySkill) { xp = _partySkillXpIncrement; goldCost = _partySkillGoldCost; }
-                    else if (skill.IsLeaderSkill) {  xp = _leaderSkillXpIncrement;goldCost = _leaderSkillGoldCost; };
-
-                    if(heroGold > goldCost)
+                    if (skillXp >= 0 && skillXp <= 100)
                     {
-                        Hero.MainHero.ChangeHeroGold(-goldCost);
-                        Hero.MainHero.AddSkillXp(skill, xp);
+                        skill.CurrentSkillXP = skillXp + SkillPointfor0to100;
+                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill0to100);
+                    }
+                    else if(skillXp >= 101 && skillXp <= 200)
+                    {
+                        skill.CurrentSkillXP = skillXp + SkillPointfor101to200;
+                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill101to200);
+                    }
+                    else if (skillXp >= 101 && skillXp <= 200)
+                    {
+                        skill.CurrentSkillXP = skillXp + SkillPointfor201to300;
+                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill201to300);
                     }
                 });
             }
@@ -63,6 +70,7 @@ namespace SkillTrainingMod.Behaviors
                 {
                     GetSkillTrainingState()
                 });
+
 
             if (Input.IsKeyPressed(InputKey.A))
             {
@@ -86,6 +94,7 @@ namespace SkillTrainingMod.Behaviors
         }
         public override void SyncData(IDataStore dataStore)
         {
+            skillTrainingState = new SkillTrainingState();
             dataStore.SyncData("skillTrainingState", ref skillTrainingState);
         }
 

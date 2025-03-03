@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
 
@@ -14,15 +15,29 @@ namespace SkillTrainingMod.GameObjects
     {
         public SkillTrainingState() 
         {
-            BoastedSkills = new List<SkillObject>();
+            BoastedSkills = new List<SkillTrainingSkillVM>();
         }
 
-        public void AddSkill(SkillTrainingSkillVM skill) => BoastedSkills.Add(skill.Skill);
-        public void RemoveSkill(SkillTrainingSkillVM skill) => BoastedSkills.Remove(skill.Skill);
-        public bool IsSkillBoasted(SkillTrainingSkillVM skill) => BoastedSkills.Any(x => x == skill.Skill);
+        public void AddSkill(SkillTrainingSkillVM skill) 
+        {
+            BoastedSkills.Add(skill);
+
+
+        }
+        public void RemoveSkill(SkillTrainingSkillVM skill)
+        {
+            if(BoastedSkills.Any(x=>x.SkillId == skill.SkillId && x.Developer.HeroNameText == skill.Developer.HeroNameText))
+            {
+                var removeSkill = BoastedSkills.FirstOrDefault(x => x.SkillId == skill.SkillId && x.Developer.HeroNameText == skill.Developer.HeroNameText);
+                BoastedSkills.Remove(removeSkill);
+            }
+        }
+
+        public bool IsSkillBoasted(SkillTrainingSkillVM skill) => BoastedSkills.Any(x => x.SkillId == skill.SkillId && x.Developer.HeroNameText == skill.Developer.HeroNameText);
+
 
         [SaveableField(1)]
-        public List<SkillObject> BoastedSkills;
+        public List<SkillTrainingSkillVM> BoastedSkills;
     }
 
     public class SkillTrainingStateSaveableTypeDefiner : SaveableTypeDefiner

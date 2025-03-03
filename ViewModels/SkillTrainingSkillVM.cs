@@ -18,7 +18,9 @@ namespace SkillTrainingMod.ViewModels
         public SkillTrainingSkillVM(ref SkillTrainingState skillTrainingState, SkillObject skill, CharacterVM developerVM, Action<PerkVM> onStartPerkSelection) : base(skill, developerVM, onStartPerkSelection)
         {
             _skillTrainingState = skillTrainingState;
-            if(_skillTrainingState.IsSkillBoasted(this))
+            Developer=developerVM;
+
+            if (_skillTrainingState.IsSkillBoasted(this))
             {
                 SetToActive();
             }
@@ -84,6 +86,8 @@ namespace SkillTrainingMod.ViewModels
                 }
             }
         }
+
+        public CharacterVM Developer;
 
         #region Properties
         private SkillTrainingState _skillTrainingState;
