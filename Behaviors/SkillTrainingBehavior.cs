@@ -1,4 +1,5 @@
-﻿using SkillTrainingMod.GameObjects;
+﻿using Helpers;
+using SkillTrainingMod.GameObjects;
 using SkillTrainingMod.Views;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -36,29 +38,36 @@ namespace SkillTrainingMod.Behaviors
         private void OnDailyTickEvent()
         {
             var skillTrainingState = GetSkillTrainingState();
-            var boastedSkills = skillTrainingState.BoastedSkills;
+            var heroInTraingings = skillTrainingState.HerosInTrainging;
 
-            if (boastedSkills != null && boastedSkills.Count > 0)
+            if (heroInTraingings != null && heroInTraingings.Count > 0)
             {
-                boastedSkills.ForEach(skill =>
+                heroInTraingings.ForEach(hero =>
                 {
                     int heroGold = Hero.MainHero.Gold;
-                    var skillXp = skill.CurrentSkillXP;
+                    var skills = hero.Skills;
 
-                    if (skillXp >= 0 && skillXp <= 100)
+                    var gameHero = Hero.FindFirst(x => x.Id.ToString() == hero.HeroId);
+                    
+                    foreach(var skill in skills)
                     {
-                        skill.CurrentSkillXP = skillXp + SkillPointfor0to100;
-                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill0to100);
-                    }
-                    else if(skillXp >= 101 && skillXp <= 200)
-                    {
-                        skill.CurrentSkillXP = skillXp + SkillPointfor101to200;
-                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill101to200);
-                    }
-                    else if (skillXp >= 101 && skillXp <= 200)
-                    {
-                        skill.CurrentSkillXP = skillXp + SkillPointfor201to300;
-                        Hero.MainHero.ChangeHeroGold(-GoldCostForSkill201to300);
+                        var skillXp = gameHero.GetSkillValue(skill);
+
+                        if (skillXp >= 0 && skillXp <= 100)
+                        {
+                            gameHero.AddSkillXp(skill, SkillPointfor0to100);
+                            Hero.MainHero.ChangeHeroGold(-GoldCostForSkill0to100);
+                        }
+                        else if (skillXp >= 101 && skillXp <= 200)
+                        {
+                            gameHero.AddSkillXp(skill, SkillPointfor101to200);
+                            Hero.MainHero.ChangeHeroGold(-GoldCostForSkill101to200);
+                        }
+                        else if (skillXp >= 101 && skillXp <= 200)
+                        {
+                            gameHero.AddSkillXp(skill, SkillPointfor201to300);
+                            Hero.MainHero.ChangeHeroGold(-GoldCostForSkill201to300);
+                        }
                     }
                 });
             }
@@ -94,8 +103,7 @@ namespace SkillTrainingMod.Behaviors
         }
         public override void SyncData(IDataStore dataStore)
         {
-            skillTrainingState = new SkillTrainingState();
-            dataStore.SyncData("skillTrainingState", ref skillTrainingState);
+            //dataStore.SyncData("SkillTrainingState", ref skillTrainingState);
         }
 
     }
