@@ -58,47 +58,13 @@
 								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!TopBackground.Width" SuggestedHeight="!TopBackground.Height" Sprite="CharacterDeveloper\left_panel_stone">
 									<Children>
 
-										<ListPanel DataSource="{UnspentAttributePointsHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="25" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotPassEventsToChildren="true">
-											<Children>
-
-												<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" VerticalAlignment="Center" PositionYOffset="-2" Sprite="CharacterDeveloper\attribute_point_icon" />
-
-												<Widget DataSource="{..}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center">
-													<Children>
-														<TextWidget DataSource="{CurrentCharacter}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="CharacterDeveloper.RightPanel.FreeFocus.Text.Prox" Brush.FontColor="#FAEBD4FF" Brush.FontSize="40" PositionYOffset="-2" IntText="@UnspentAttributePoints" />
-													</Children>
-												</Widget>
-											</Children>
-										</ListPanel>
-
 										<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.RightPanel.Title.Text" Text="@SkillsText"  DoNotAcceptEvents="true"/>
-
-										<ListPanel DataSource="{UnspentCharacterPointsHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="25" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" DoNotPassEventsToChildren="true">
-											<Children>
-
-												<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" VerticalAlignment="Center" Sprite="CharacterDeveloper\cp_icon" PositionYOffset="-2"/>
-
-												<Widget DataSource="{..}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center">
-													<Children>
-														<TextWidget DataSource="{CurrentCharacter}"  WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" PositionYOffset="-2" Brush="CharacterDeveloper.RightPanel.FreeFocus.Text.Prox" Brush.FontColor="#FAEBD4FF" Brush.FontSize="40" IntText="@UnspentCharacterPoints" />
-													</Children>
-												</Widget>
-											</Children>
-										</ListPanel>
 
 									</Children>
 								</Widget>
 
 								<ListPanel Id="InnerPanel" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" PositionYOffset="5" MarginTop="!TopBackground.Height"  Command.Click="ExecuteOnSelected" >
 									<Children>
-
-										<NavigationScopeTargeter ScopeID="AttributesScope" ScopeParent="..\AttributesList" ScopeMovements="Vertical" RightNavigationScope="SkillsScope" />
-										<NavigatableListPanel Id="AttributesList" DataSource="{CurrentCharacter\Attributes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop">
-											<ItemTemplate>
-												<AttributeListItem MarginBottom="14"/>
-											</ItemTemplate>
-										</NavigatableListPanel>
-
 
 										<NavigationScopeTargeter ScopeID="SkillsScope" ScopeParent="..\SkillsGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" IsDefaultNavigationScope="true" AlternateMovementStepSize="3" LeftNavigationScope="AttributesScope" RightNavigationScope="PerksFirstScope" />
 										<NavigatableGridWidget Id="SkillsGrid" DataSource="{Skills}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" DefaultCellWidth="178" DefaultCellHeight="138" ColumnCount="3" MarginLeft="11.558"  >

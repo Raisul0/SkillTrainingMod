@@ -13,10 +13,10 @@
 				<ButtonWidget   WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
 												SuggestedHeight="30" SuggestedWidth="30"
 												HorizontalAlignment="Center" VerticalAlignment="Top"
-												MarginLeft="130"
+												MarginLeft="80"
 												Command.Click="ExecuteOnSelected" >
 					<Children>
-						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="30" Sprite="@SpriteName" DoNotAcceptEvents="true"/>
+						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="30" Sprite="@SpriteName" DoNotAcceptEvents="true" Color="@Color"/>
 					</Children>
 				</ButtonWidget>
 				<!--  -->
@@ -39,15 +39,6 @@
 						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="30" Brush="Skill.Point.Small" MarginRight="2" ForcePixelPerfectRenderPlacement="true"/>
 					</Children>
 				</SkillPointsContainerListPanel>
-
-				<!-- <HintWidget DataSource="{SkillFocusAndLevelHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" /> -->
-				<ValueBasedVisibilityWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="33" SuggestedHeight="36" IndexToBeVisible="0" WatchType="BiggerThan" IndexToWatch="@NumOfUnopenedPerks" HorizontalAlignment="Right" VerticalAlignment="Top" PositionYOffset="-4" IsEnabled="false">
-					<Children>
-						<BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.PerkNotificationBrush"/>
-						<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush.FontSize="18"  IntText="@NumOfUnopenedPerks" ClipContents="false"/>
-					</Children>
-				</ValueBasedVisibilityWidget>
-
 
 			</Children>
 		</SkillTrainingGridItemWidget>

@@ -19,11 +19,16 @@ namespace SkillTrainingMod.ViewModels
         {
             _skillTrainingState = skillTrainingState;
             Developer=developerVM;
+            SpriteName = "Inventory\\icon_gold";
+
+            Color = new Color(0, 0, 0).ToString();
 
             if (_skillTrainingState.IsSkillBoasted(this))
             {
                 SetToActive();
             }
+
+            ;
         }
 
         public void ExecuteOnSelected()
@@ -43,13 +48,13 @@ namespace SkillTrainingMod.ViewModels
 
         private void SetToActive()
         {
-            this.SpriteName = "CharacterDeveloper\\cp_icon";
+            Color = new Color(50, 50, 50).ToString();   
             IsActive = true;
         }
 
         private void SetToInActive()
         {
-            this.SpriteName = "";
+            Color = new Color(0, 0, 0).ToString();
             IsActive = false;
         }
 
@@ -66,6 +71,23 @@ namespace SkillTrainingMod.ViewModels
                 {
                     this._spriteName = value;
                     base.OnPropertyChangedWithValue<string>(value, "SpriteName");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public string Color
+        {
+            get
+            {
+                return this._color;
+            }
+            set
+            {
+                if (value != this._color)
+                {
+                    this._color = value;
+                    base.OnPropertyChangedWithValue<string>(value, "Color");
                 }
             }
         }
@@ -94,6 +116,7 @@ namespace SkillTrainingMod.ViewModels
         private string _spriteName;
         private bool _isActive;
         private SkillVM x;
+        private string _color;
 
         #endregion
     }

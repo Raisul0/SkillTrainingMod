@@ -64,6 +64,8 @@ namespace SkillTrainingMod.Views
             ResourceDepot uiResourceDepot = UIResourceManager.UIResourceDepot;
             this.spriteCategory = spriteData.SpriteCategories["ui_characterdeveloper"];
             this.spriteCategory.Load(resourceContext, uiResourceDepot);
+            this.spriteCategory = spriteData.SpriteCategories["ui_inventory"];
+            this.spriteCategory.Load(resourceContext, uiResourceDepot);
         }
 
         protected override void OnFrameTick(float dt)
