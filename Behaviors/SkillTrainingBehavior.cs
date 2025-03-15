@@ -1,4 +1,5 @@
 ﻿using Helpers;
+using SkillTrainingMod.Extensions;
 using SkillTrainingMod.GameObjects;
 using SkillTrainingMod.Views;
 using System;
@@ -27,11 +28,11 @@ namespace SkillTrainingMod.Behaviors
         public SkillTrainingState skillTrainingState;
 
         private static int SkillPointfor0to100 = 6;
-        private static int GoldCostForSkill0to100 = 300 * SkillPointfor0to100;
+        private static int GoldCostForSkill0to100 = 300;
         private static int SkillPointfor101to200 = 3;
-        private static int GoldCostForSkill101to200 = 900 * SkillPointfor101to200;
+        private static int GoldCostForSkill101to200 = 900;
         private static int SkillPointfor201to300 = 1;
-        private static int GoldCostForSkill201to300 = 1800 * SkillPointfor201to300;
+        private static int GoldCostForSkill201to300 = 1800;
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -56,45 +57,57 @@ namespace SkillTrainingMod.Behaviors
 
                     var skillXp = sk.Developer.Hero.GetSkillValue(sk.Skill);
 
-                    if (skillXp >= 0 && skillXp <= 100)
+                    if (skillXp >= 0 && skillXp < 100)
                     {
                         xpIncremeant = SkillPointfor0to100;
-                        goldCost = GoldCostForSkill0to100;
+                        if(skillXp+ xpIncremeant > 100)
+                        {
+                            xpIncremeant -= skillXp + xpIncremeant - 100;
+                        }
+                        goldCost = GoldCostForSkill0to100 * xpIncremeant;
                     }
-                    else if (skillXp >= 101 && skillXp <= 200)
+                    else if (skillXp >= 100 && skillXp < 200)
                     {
                         xpIncremeant = SkillPointfor101to200;
-                        goldCost = GoldCostForSkill101to200;
+                        if (skillXp + xpIncremeant > 200)
+                        {
+                            xpIncremeant -= skillXp + xpIncremeant - 200;
+                        }
+                        goldCost = GoldCostForSkill101to200 * xpIncremeant;
                     }
-                    else if (skillXp >= 101 && skillXp <= 200)
+                    else if (skillXp >= 200 && skillXp < 300)
                     {
                         xpIncremeant = SkillPointfor201to300;
-                        goldCost = GoldCostForSkill201to300;
+                        if (skillXp + xpIncremeant > 300)
+                        {
+                            xpIncremeant -= skillXp + xpIncremeant - 300;
+                        }
+                        goldCost = GoldCostForSkill201to300 * xpIncremeant;
                     }
 
-                    totalGoldCost += goldCost;
-
-                    if (heroGold >= totalGoldCost)
+                    if (heroGold >= goldCost)
                     {
+                        totalGoldCost += goldCost;
                         IncreaseCharacterAndSkillXP((HeroDeveloper)sk.Developer.Hero.HeroDeveloper, sk.Skill, xpIncremeant);
-                        //sk.Developer.Hero.HeroDeveloper.ChangeSkillLevel(sk.Skill,xpIncremeant);
-                        //SkillLevelingManager.OnHeroHealedWhileWaiting(sk.Developer.Hero, xpIncremeant);
+                        MapNotificationForSkillTrainingGoldCost(sk.Skill.Name, goldCost);
+                        Hero.MainHero.ChangeHeroGold(-goldCost);
                     }
                     else
                     {
-                        break;
+                        skillTrainingState.RemoveSkill(sk);
+                        continue;
                     }
                 }
-
-                Hero.MainHero.ChangeHeroGold(-totalGoldCost);
-
-                TextObject textObject = new TextObject("{=dPD5zood}Daily Gold Cost For Skill Training: {CHANGE}{GOLD_ICON}", null);
-                textObject.SetTextVariable("CHANGE", -totalGoldCost);
-                textObject.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
-                string soundEventPath = (-totalGoldCost > 0) ? "event:/ui/notification/coins_positive" : ((-totalGoldCost == 0) ? string.Empty : "event:/ui/notification/coins_negative");
-                InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), soundEventPath));
-
             }
+        }
+
+        private void MapNotificationForSkillTrainingGoldCost(TextObject skillName,int goldAmount)
+        { 
+            TextObject textObject = new TextObject("{=dPD5zood}Daily Gold Cost For Skill Training of " + skillName.ToString() + " : {CHANGE}{GOLD_ICON}", null);
+            textObject.SetTextVariable("CHANGE", -goldAmount);
+            textObject.SetTextVariable("GOLD_ICON", "{=!}<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+            string soundEventPath = (-goldAmount > 0) ? "event:/ui/notification/coins_positive" : ((-goldAmount == 0) ? string.Empty : "event:/ui/notification/coins_negative");
+            InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), soundEventPath));
         }
 
         private void IncreaseCharacterAndSkillXP(HeroDeveloper heroDeveloper,SkillObject skill,int changeAmount)
@@ -109,9 +122,9 @@ namespace SkillTrainingMod.Behaviors
                 num2 += (float)(Campaign.Current.Models.CharacterDevelopmentModel.GetXpRequiredForSkillLevel(i) - Campaign.Current.Models.CharacterDevelopmentModel.GetXpRequiredForSkillLevel(i - 1));
             }
 
-            heroDeveloper.AddSkillXp(skill, num2 + 1f, isAffectedByFocusFactor: false, true);
-            SkillLevelingManager.OnHeroHealedWhileWaiting(heroDeveloper.Hero, (int)num2);
-
+            heroDeveloper.AddSkillXp(skill, num2 + 1f, false, false);
+            HeroDeveloperExtension.ModifyHeroXp(heroDeveloper, num2 + 1f);
+            //SkillLevelingManager.OnHeroHealedWhileWaiting(heroDeveloper.Hero, (int)num2);
         }
 
         private void OnTickEvent(float obj)
