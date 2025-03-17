@@ -27,12 +27,6 @@ namespace SkillTrainingMod.Behaviors
     {
         public SkillTrainingState skillTrainingState;
 
-        private static int SkillPointfor0to100 = 6;
-        private static int GoldCostForSkill0to100 = 300;
-        private static int SkillPointfor101to200 = 3;
-        private static int GoldCostForSkill101to200 = 900;
-        private static int SkillPointfor201to300 = 1;
-        private static int GoldCostForSkill201to300 = 1800;
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -51,7 +45,7 @@ namespace SkillTrainingMod.Behaviors
                 for(int i = 0; i < skillsInTraining.Count; i++)
                 {
                     var sk = skillsInTraining[i];
-                    int heroGold = Hero.MainHero.Gold;
+                    int heroGold = Hero.MainHero.Gold-SkillTrainingModState.MinHeroGold;
                     var xpIncremeant = 0;
                     var goldCost = 0;
 
@@ -59,32 +53,39 @@ namespace SkillTrainingMod.Behaviors
 
                     if (skillXp >= 0 && skillXp < 100)
                     {
-                        xpIncremeant = SkillPointfor0to100;
+                        xpIncremeant = SkillTrainingModState.SkillPointfor1to100;
                         if(skillXp+ xpIncremeant > 100)
                         {
                             xpIncremeant -= skillXp + xpIncremeant - 100;
                         }
-                        goldCost = GoldCostForSkill0to100 * xpIncremeant;
+                        goldCost = SkillTrainingModState.GoldCostForSkill1to100 * xpIncremeant;
                     }
                     else if (skillXp >= 100 && skillXp < 200)
                     {
-                        xpIncremeant = SkillPointfor101to200;
+                        xpIncremeant = SkillTrainingModState.SkillPointfor101to200;
                         if (skillXp + xpIncremeant > 200)
                         {
                             xpIncremeant -= skillXp + xpIncremeant - 200;
                         }
-                        goldCost = GoldCostForSkill101to200 * xpIncremeant;
+                        goldCost = SkillTrainingModState.GoldCostForSkill101to200 * xpIncremeant;
                     }
                     else if (skillXp >= 200 && skillXp < 300)
                     {
-                        xpIncremeant = SkillPointfor201to300;
+                        xpIncremeant = SkillTrainingModState.SkillPointfor201to300;
                         if (skillXp + xpIncremeant > 300)
                         {
                             xpIncremeant -= skillXp + xpIncremeant - 300;
                         }
-                        goldCost = GoldCostForSkill201to300 * xpIncremeant;
+                        goldCost = SkillTrainingModState.GoldCostForSkill201to300 * xpIncremeant;
                     }
 
+                    if(skillXp + xpIncremeant > SkillTrainingModState.MaxSkillLevel)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("Skill Training Level Will Exceed Allowed Level!"));
+                        continue;
+                    }
+
+                    
                     if (heroGold >= goldCost)
                     {
                         totalGoldCost += goldCost;
@@ -95,6 +96,7 @@ namespace SkillTrainingMod.Behaviors
                     else
                     {
                         skillTrainingState.RemoveSkill(sk);
+                        InformationManager.DisplayMessage(new InformationMessage("Not Enough Gold!"));
                         continue;
                     }
                 }
